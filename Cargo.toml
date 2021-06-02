@@ -2,6 +2,9 @@
 edition = "2018"
 name = "the-foo-bar"
 version = "0.1.0"
+license = "Apache-2.0"
+repository = ""
+
 [dependencies]
 chrono = "0.4.19"
 diesel_migrations = "1.4.0"
