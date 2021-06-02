@@ -1,0 +1,33 @@
+[package]
+edition = "2018"
+name = "the-foo-bar"
+version = "0.1.0"
+[dependencies]
+chrono = "0.4.19"
+diesel_migrations = "1.4.0"
+dotenv = "*"
+http = "*"
+log = "*"
+pretty_env_logger = "*"
+r2d2 = "0.8.9"
+r2d2-diesel = "1.0.0"
+rocket = "0.4.10"
+rocket_codegen = "0.4.10"
+serde = "*"
+serde_json = "*"
+slug = "*"
+thiserror = "*"
+rocket_cors = "0.5.2"
+
+[dependencies.diesel]
+features = ["postgres", "chrono", "uuid"]
+version = "1.4.6"
+
+[dependencies.rocket_contrib]
+default-features = false
+features = ["json"]
+version = "*"
+
+[target]
+[target.x86_64-unknown-linux-gnu]
+linker = "x86_64-linux-gnu-gcc"
