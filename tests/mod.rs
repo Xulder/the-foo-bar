@@ -1,1 +1,6 @@
-pub mod post_test;
+
+
+pub mod posts;
+
+
+

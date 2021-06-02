@@ -1,13 +1,5 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
-#[get("/ping")]
-fn ping() -> &'static str {
-    "pong"
-}
+use the_foo_bar;
 
 fn main() {
-    rocket::ignite()
-        .attach(DbConn::fairing())
-        .mount("/", routes![ping])
-        .launch();
+    the_foo_bar::rocket().launch();
 }

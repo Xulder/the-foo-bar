@@ -6,3 +6,4 @@ table! {
         published -> Bool,
     }
 }
+

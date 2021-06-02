@@ -1,6 +1,7 @@
-use diesel::{Queryable, Insertable};
+use diesel::{Queryable};
+use serde::Serialize;
 
-#[derive(Queryable)]
+#[derive(Queryable, Serialize)]
 pub struct Post {
     pub id: i32,
     pub title: String,
