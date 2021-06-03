@@ -4,5 +4,3 @@ CREATE TABLE posts (
                        body TEXT NOT NULL,
                        published BOOLEAN NOT NULL DEFAULT 'f'
 )
-
-// should be in db browser now maybe not?

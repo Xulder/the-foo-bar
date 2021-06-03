@@ -15,6 +15,13 @@ pub struct NewPostData {
     body: String,
 }
 
+#[get("/posts", format = "json")]
+pub fn get_all_posts(conn: db::DbConn) -> JsonValue {
+    let posts = db::posts::all(&conn);
+
+    json!({ "posts": posts })
+}
+
 #[post("/posts", format = "json", data = "<new_post>")]
 pub fn create_post(new_post: Json<NewPost>, conn: db::DbConn) -> JsonValue {
     let new_post = new_post.into_inner().post;

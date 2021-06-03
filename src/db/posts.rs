@@ -6,11 +6,17 @@ use crate::schema::posts;
 use crate::models::post::Post;
 // use crate::models::post::PostJson
 
+use crate::schema::posts::dsl::{posts as all_posts};
+
 #[derive(Insertable, Queryable, Debug, Clone)]
 #[table_name="posts"]
 pub struct NewPost<'a> {
     pub title: &'a str,
     pub body: &'a str,
+}
+
+pub fn all(conn: &PgConnection) -> Vec<Post> {
+    all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap()
 }
 
 //TODO: figure out why this doesn't work with return PostJson

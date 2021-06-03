@@ -28,11 +28,14 @@ fn not_found() -> JsonValue {
 
 pub fn rocket() -> rocket::Rocket {
     dotenv().ok();
-    rocket::ignite().mount(
+    rocket::ignite()
+        .mount(
         "/api",
         routes![
             routes::posts::create_post,
-        ]
-    )
+            routes::posts::get_all_posts
+            ]
+        )
+        .attach(db::DbConn::fairing())
         .register(catchers![not_found])
 }

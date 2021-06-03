@@ -1,0 +1,2 @@
+[global.databases]
+diesel_postgres_pool = { url = "postgres://postgres:1234@localhost:5433/foobardb"}
