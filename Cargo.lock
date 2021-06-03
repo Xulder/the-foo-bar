@@ -766,6 +766,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "once_cell"
+version = "1.8.0-pre.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4172e744a8d2b76c9b9fceb6fa0a114aa5ff1a3ee7474064746f419a99ea3221"
+
+[[package]]
 name = "opaque-debug"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1246,6 +1252,7 @@ dependencies = [
  "dotenv",
  "http",
  "log 0.4.14",
+ "once_cell",
  "pretty_env_logger",
  "r2d2",
  "r2d2-diesel",

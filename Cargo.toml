@@ -30,3 +30,6 @@ version = "1.4.6"
 default-features = false
 features = ["json", "diesel_postgres_pool"]
 version = "*"
+
+[dev-dependencies]
+once_cell = "1.8.0-pre.1"

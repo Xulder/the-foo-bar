@@ -6,17 +6,14 @@
 // #[macro_use] extern crate log;
 #[macro_use] extern crate rocket_contrib;
 
-// use rocket_cors;
-
-use dotenv::dotenv;
-
 mod models;
 mod routes;
 mod schema;
 mod db;
 
 use rocket_contrib::json::JsonValue;
-// use rocket_cors::Cors;
+use rocket_cors::Cors;
+use dotenv::dotenv;
 
 #[catch(404)]
 fn not_found() -> JsonValue {
@@ -24,6 +21,10 @@ fn not_found() -> JsonValue {
         "status": "error",
         "reason": "Resource was not found."
     })
+}
+
+fn cors_fairing() -> Cors {
+    Cors::from_options(&Default::default()).expect("Cors fairing cannot be created")
 }
 
 pub fn rocket() -> rocket::Rocket {
@@ -37,5 +38,6 @@ pub fn rocket() -> rocket::Rocket {
             ]
         )
         .attach(db::DbConn::fairing())
+        .attach(cors_fairing())
         .register(catchers![not_found])
 }

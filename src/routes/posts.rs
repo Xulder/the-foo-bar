@@ -1,6 +1,5 @@
 use crate::db;
 use crate::db::posts::{create};
-// use rocket::request::Form;
 use rocket_contrib::json::{Json, JsonValue};
 use serde::Deserialize;
 
@@ -30,3 +29,5 @@ pub fn create_post(new_post: Json<NewPost>, conn: db::DbConn) -> JsonValue {
 
     json!({ "post": post })
 }
+
+
