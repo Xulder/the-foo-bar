@@ -4,7 +4,7 @@ A high performance social media platform focused towards technical content creat
 # Screenshots
 
 # Current Objectives
-![Mind map](https://imgur.com/a/R0idZ0J)
+![Home Page](https://imgur.com/a/R0idZ0J)
 
 * OAuth integration to repository and ci pipelines
 * Live video feed with extention api
