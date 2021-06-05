@@ -5,11 +5,15 @@
 // #[macro_use] extern crate diesel_migrations;
 // #[macro_use] extern crate log;
 #[macro_use] extern crate rocket_contrib;
+#[macro_use] extern crate validator_derive;
 
 mod models;
 mod routes;
 mod schema;
 mod db;
+mod error;
+mod auth;
+mod config;
 
 use rocket_contrib::json::JsonValue;
 use rocket_cors::Cors;
@@ -34,10 +38,12 @@ pub fn rocket() -> rocket::Rocket {
         "/api",
         routes![
             routes::posts::create_post,
-            routes::posts::get_all_posts
+            routes::posts::get_all_posts,
+            routes::users::create_user,
             ]
         )
         .attach(db::DbConn::fairing())
         .attach(cors_fairing())
+        .attach(config::AppState::manage())
         .register(catchers![not_found])
 }

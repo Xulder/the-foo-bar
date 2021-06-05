@@ -2,6 +2,7 @@ use crate::db;
 use crate::db::posts::{create};
 use rocket_contrib::json::{Json, JsonValue};
 use serde::Deserialize;
+use diesel::PgConnection;
 
 #[derive(Deserialize)]
 pub struct NewPost {

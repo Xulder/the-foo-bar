@@ -5,6 +5,7 @@ use crate::schema::posts;
 use crate::models::post::{Post};
 
 use crate::schema::posts::dsl::{posts as all_posts};
+use crate::db::DbConn;
 
 #[derive(Insertable)]
 #[table_name="posts"]
@@ -13,11 +14,11 @@ pub struct NewPost<'a> {
     pub body: &'a str,
 }
 
-pub fn all(conn: &PgConnection) -> Vec<Post> {
+pub fn all(conn: &DbConn) -> Vec<Post> {
     all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap()
 }
 
-pub fn create(conn: &PgConnection, title: &str, body: &str) -> Post {
+pub fn create(conn: &DbConn, title: &str, body: &str) -> Post {
     let p = &NewPost {
         title,
         body
