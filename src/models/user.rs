@@ -15,7 +15,6 @@ pub struct User {
 #[derive(Serialize)]
 pub struct UserAuth<'a> {
     username: &'a str,
-    usertag: &'a [u8; 4],
     email: &'a str,
     token: String
 }
@@ -26,14 +25,12 @@ impl User {
         let token = Auth {
             id: self.id,
             username: self.username.clone(),
-            usertag: self.usertag.clone(),
             exp: exp.timestamp(),
         }
         .token(secret);
 
         UserAuth {
             username: &self.username,
-            usertag: &self.usertag,
             email: &self.email,
             token,
         }

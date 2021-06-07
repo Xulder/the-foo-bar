@@ -7,7 +7,8 @@ use validator::{Validate, ValidationError, ValidationErrors};
 
 #[derive(Debug)]
 pub struct Errors {
-    errors: ValidationErrors,
+    validation_errors: ValidationErrors,
+    // TODO: Add additional dependency error types
 }
 
 pub type FieldName = &'static str;
@@ -19,7 +20,7 @@ impl Errors {
         for (field, code) in errs {
             errors.add(field, ValidationError::new(code));
         }
-        Self { errors }
+        Self { validation_errors: errors }
     }
 }
 
@@ -28,7 +29,7 @@ impl<'r> Responder<'r> for Errors {
         use validator::ValidationErrorsKind::Field;
 
         let mut errors = json!({});
-        for (field, field_errors) in self.errors.into_errors() {
+        for (field, field_errors) in self.validation_errors.into_errors() {
             if let Field(field_errors) = field_errors {
                 errors[field] = field_errors.into_iter().map(|field_error| field_error.code).collect();
             }
@@ -67,7 +68,7 @@ impl FieldValidator {
             Ok(())
         } else {
             Err(Errors {
-                errors: self.errors,
+                validation_errors: self.errors,
             })
         }
     }

@@ -1,8 +1,10 @@
 table! {
     posts (id) {
         id -> Int4,
-        title -> Varchar,
+        slug -> Text,
+        title -> Text,
         body -> Text,
+        author -> Int4,
         published -> Bool,
     }
 }
@@ -15,6 +17,8 @@ table! {
         hash -> Text,
     }
 }
+
+joinable!(posts -> users (author));
 
 allow_tables_to_appear_in_same_query!(
     posts,

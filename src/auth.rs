@@ -7,6 +7,7 @@ use crate::config::AppState;
 use jsonwebtoken as jwt;
 
 use crate::config;
+use jsonwebtoken::{EncodingKey, DecodingKey};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Auth {
@@ -15,12 +16,12 @@ pub struct Auth {
     /// user id
     pub id: i32,
     pub username: String,
-    pub usertag: [u8; 4]
+    // TODO: Add Roles
 }
 
 impl Auth {
     pub fn token(&self, secret: &[u8]) -> String {
-        jwt::encode(&jwt::Header::default(), self, secret).expect("jwt")
+        jwt::encode(&jwt::Header::default(), self, &EncodingKey::from_secret(secret)).expect("jwt")
     }
 }
 
@@ -62,7 +63,7 @@ fn extract_token_from_header(header: &str) -> Option<&str> {
 fn decode_token(token: &str, secret: &[u8]) -> Option<Auth> {
     use jwt::{Algorithm, Validation};
 
-    jwt::decode(token, secret, &Validation::new(Algorithm::HS256))
+    jwt::decode(token, &DecodingKey::from_secret(secret), &Validation::new(Algorithm::HS256))
         .map_err(|err| {
             eprintln!("Auth decode error: {:?}", err);
         })

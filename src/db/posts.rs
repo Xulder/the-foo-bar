@@ -1,8 +1,10 @@
 use diesel;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
-use crate::schema::posts;
-use crate::models::post::{Post};
+use slug;
+use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use crate::schema::{posts, users};
+use crate::models::post::{Post, PostJson};
 
 use crate::schema::posts::dsl::{posts as all_posts};
 use crate::db::DbConn;
@@ -28,4 +30,42 @@ pub fn create(conn: &DbConn, title: &str, body: &str) -> Post {
         .values(p)
         .get_result::<Post>(conn)
         .expect("Error creating post")
+}
+
+fn slugify(title: &str) -> String {
+    if cfg!(feature = "random-suffix") {
+        format!("{}-{}", slug::slugify(title), generate_suffix(SUFFIX_LEN))
+    } else {
+        slug::slugify(title)
+    }
+}
+
+fn generate_suffix(len: usize) -> String {
+    let mut rng = thread_rng();
+    // (0..len).map(|_| rng.sample(Alphanumeric)).collect()
+    iter::repeat(())
+        .map(|()| rng.sample(Alphanumeric))
+        .map(char::from)
+        .take(len)
+        .collect()
+}
+
+pub fn get_post(conn: &PgConnection, slug: &str, user_id: Option<i32>) -> Option<PostJson> {
+    let post = posts::table
+        .filter(posts::slug.eq(slug))
+        .first::<Post>(conn)
+        .map_err(|err| eprintln!("articles::find_one: {}", err))
+        .ok()?;
+
+    Some(populate(conn, post))
+}
+
+
+fn populate(conn: &PgConnection, post: Post) -> PostJson {
+    let author = users::table
+        .find(post.author)
+        .get_result::<User>(conn)
+        .expect("Error loading author");
+
+    post.attach(author)
 }

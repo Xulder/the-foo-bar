@@ -2,10 +2,12 @@
 
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate diesel;
-// #[macro_use] extern crate diesel_migrations;
-// #[macro_use] extern crate log;
+#[macro_use] extern crate diesel_migrations;
+#[macro_use] extern crate log;
 #[macro_use] extern crate rocket_contrib;
 #[macro_use] extern crate validator_derive;
+
+use dotenv::dotenv;
 
 mod models;
 mod routes;
@@ -13,11 +15,10 @@ mod schema;
 mod db;
 mod error;
 mod auth;
-mod config;
 
+mod config;
 use rocket_contrib::json::JsonValue;
 use rocket_cors::Cors;
-use dotenv::dotenv;
 
 #[catch(404)]
 fn not_found() -> JsonValue {
@@ -39,7 +40,11 @@ pub fn rocket() -> rocket::Rocket {
         routes![
             routes::posts::create_post,
             routes::posts::get_all_posts,
+            routes::posts::get_post,
             routes::users::create_user,
+            routes::users::login_user,
+            routes::users::get_user,
+            routes::users::put_user,
             ]
         )
         .attach(db::DbConn::fairing())
