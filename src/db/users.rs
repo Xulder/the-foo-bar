@@ -7,10 +7,10 @@ use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::result::{DatabaseErrorKind, Error};
 use rand_core::OsRng;
-use validator::ValidationError;
+use serde::Deserialize;
 
 use crate::schema::users::dsl::{users as all_users};
-use crate::db::DbConn;
+// use crate::db::DbConn;
 use crate::models::user::User;
 
 ///

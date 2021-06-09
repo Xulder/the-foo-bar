@@ -1,12 +1,10 @@
-use crate::{db, db::users::create};
+use crate::{db};
 use rocket_contrib::json::{Json, JsonValue};
 use serde::Deserialize;
 use crate::error::{FieldValidator, Errors};
 use crate::config::AppState;
 use rocket::State;
-use validator::{Validate, ValidationError};
 use crate::db::users::UserCreationError;
-use diesel::PgConnection;
 use crate::auth::Auth;
 
 #[derive(Deserialize)]
@@ -39,13 +37,12 @@ pub fn create_user(new_user: Json<NewUser>, conn: db::DbConn, state: State<AppSt
     let new_user = new_user.into_inner().user;
     let mut extractor = FieldValidator::validate(&new_user);
     let username = extractor.extract("username", new_user.username);
-    let usertag = extractor.extract("usertag", new_user.usertag);
     let email = extractor.extract("email", new_user.email);
     let password = extractor.extract("password", new_user.password);
 
     extractor.check()?;
 
-    db::users::create(&conn, &username, &usertag, &email, &password)
+    db::users::create(&conn, &username, &email, &password)
         .map(|user| json!({ "user": user.to_user_auth(&state.secret) }))
         .map_err(|error| {
             let field = match error {

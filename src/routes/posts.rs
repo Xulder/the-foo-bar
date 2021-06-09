@@ -2,7 +2,6 @@ use crate::db;
 use crate::db::posts::{create};
 use rocket_contrib::json::{Json, JsonValue};
 use serde::Deserialize;
-use diesel::PgConnection;
 use crate::auth::Auth;
 
 #[derive(Deserialize)]
@@ -23,6 +22,7 @@ pub fn get_all_posts(conn: db::DbConn) -> JsonValue {
     json!({ "posts": posts })
 }
 
+/// TODO: Update this route to reflect the new post model
 #[post("/posts", format = "json", data = "<new_post>")]
 pub fn create_post(auth: Auth, new_post: Json<NewPost>, conn: db::DbConn) -> JsonValue {
     let new_post = new_post.into_inner().post;

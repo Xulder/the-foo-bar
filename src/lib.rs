@@ -2,8 +2,8 @@
 
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate diesel;
-#[macro_use] extern crate diesel_migrations;
-#[macro_use] extern crate log;
+// #[macro_use] extern crate diesel_migrations;
+// #[macro_use] extern crate log;
 #[macro_use] extern crate rocket_contrib;
 #[macro_use] extern crate validator_derive;
 
@@ -40,7 +40,7 @@ pub fn rocket() -> rocket::Rocket {
         routes![
             routes::posts::create_post,
             routes::posts::get_all_posts,
-            routes::posts::get_post,
+            // routes::posts::get_post,
             routes::users::create_user,
             routes::users::login_user,
             routes::users::get_user,

@@ -7,7 +7,11 @@ use crate::schema::{posts, users};
 use crate::models::post::{Post, PostJson};
 
 use crate::schema::posts::dsl::{posts as all_posts};
-use crate::db::DbConn;
+use core::iter;
+use crate::models::user::User;
+
+const SUFFIX_LEN: usize = 6;
+const DEFAULT_LIMIT: i64 = 20;
 
 #[derive(Insertable)]
 #[table_name="posts"]
@@ -16,20 +20,27 @@ pub struct NewPost<'a> {
     pub body: &'a str,
 }
 
-pub fn all(conn: &DbConn) -> Vec<Post> {
+pub fn all(conn: &PgConnection) -> Vec<Post> {
     all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap()
 }
 
-pub fn create(conn: &DbConn, title: &str, body: &str) -> Post {
+/// TODO: Update this function to reflect the new post model
+pub fn create(conn: &PgConnection, author: i32, title: &str, body: &str) -> PostJson {
     let p = &NewPost {
         title,
         body
     };
 
+    let author = users::table
+        .find(author)
+        .get_result::<User>(conn)
+        .expect("Error loading author");
+
     diesel::insert_into(posts::table)
         .values(p)
         .get_result::<Post>(conn)
         .expect("Error creating post")
+        .attach(author)
 }
 
 fn slugify(title: &str) -> String {
