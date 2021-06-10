@@ -2,7 +2,7 @@
 A high performance social media platform directed towards technical content creators
 
 # Screenshots
-![Home Page](https://imgur.com/sXfhyya)
+![Home Page](https://i.imgur.com/sXfhyya.png)
 
 # Current Objectives
 
