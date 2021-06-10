@@ -18,6 +18,8 @@ const DEFAULT_LIMIT: i64 = 20;
 pub struct NewPost<'a> {
     pub title: &'a str,
     pub body: &'a str,
+    pub slug: &'a str,
+    pub author: i32,
 }
 
 pub fn all(conn: &PgConnection) -> Vec<Post> {
@@ -26,9 +28,11 @@ pub fn all(conn: &PgConnection) -> Vec<Post> {
 
 /// TODO: Update this function to reflect the new post model
 pub fn create(conn: &PgConnection, author: i32, title: &str, body: &str) -> PostJson {
-    let p = &NewPost {
+    let new_post = &NewPost {
         title,
-        body
+        body,
+        author,
+        slug: &slugify(title),
     };
 
     let author = users::table
@@ -37,7 +41,7 @@ pub fn create(conn: &PgConnection, author: i32, title: &str, body: &str) -> Post
         .expect("Error loading author");
 
     diesel::insert_into(posts::table)
-        .values(p)
+        .values(new_post)
         .get_result::<Post>(conn)
         .expect("Error creating post")
         .attach(author)
@@ -61,7 +65,17 @@ fn generate_suffix(len: usize) -> String {
         .collect()
 }
 
-pub fn get_post(conn: &PgConnection, slug: &str, user_id: Option<i32>) -> Option<PostJson> {
+#[derive(FromForm, Default)]
+pub struct FeedPosts {
+    limit: Option<i64>,
+    offset: Option<i64>,
+}
+
+// pub fn feed(conn: &PgConnection, params: &FeedArticles) {
+//
+// }
+
+pub fn get_post(conn: &PgConnection, slug: &str) -> Option<PostJson> {
     let post = posts::table
         .filter(posts::slug.eq(slug))
         .first::<Post>(conn)

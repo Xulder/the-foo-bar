@@ -19,6 +19,7 @@ mod auth;
 mod config;
 use rocket_contrib::json::JsonValue;
 use rocket_cors::Cors;
+use rocket_oauth2::OAuth2;
 
 #[catch(404)]
 fn not_found() -> JsonValue {
@@ -45,10 +46,13 @@ pub fn rocket() -> rocket::Rocket {
             routes::users::login_user,
             routes::users::get_user,
             routes::users::put_user,
+            routes::oauth::github_callback,
+            routes::oauth::github_login
             ]
         )
         .attach(db::DbConn::fairing())
         .attach(cors_fairing())
+        .attach(OAuth2::<routes::oauth::GitHubUserInfo>::fairing("github"))
         .attach(config::AppState::manage())
         .register(catchers![not_found])
 }
