@@ -32,4 +32,7 @@ pub fn create_post(auth: Auth, new_post: Json<NewPost>, conn: db::DbConn) -> Jso
     json!({ "post": post })
 }
 
-
+#[get("/posts/<slug>")]
+pub fn get_post(slug: String, conn: db::DbConn) -> Option<JsonValue> {
+    db::posts::get_post(&conn, &slug).map(|post| json!({ "post": post }))
+}

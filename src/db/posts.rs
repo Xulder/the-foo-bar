@@ -85,7 +85,6 @@ pub fn get_post(conn: &PgConnection, slug: &str) -> Option<PostJson> {
     Some(populate(conn, post))
 }
 
-
 fn populate(conn: &PgConnection, post: Post) -> PostJson {
     let author = users::table
         .find(post.author)
