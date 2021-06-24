@@ -33,7 +33,6 @@ pub enum UserCreationError {
 impl From<Error> for UserCreationError {
     fn from(err: Error) -> UserCreationError {
         if let Error::DatabaseError(DatabaseErrorKind::UniqueViolation, info) = &err {
-            // Do actual duplicate checking?
             match info.constraint_name() {
                 Some("users_username_key") => return UserCreationError::DuplicatedUsername,
                 Some("users_email_key") => return UserCreationError::DuplicatedEmail,
